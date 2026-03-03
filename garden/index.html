@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌱 Garden Directory – Sustainability Sphere</title>
+  <meta name="description" content="Explore our QR Plant Garden. Scan a QR code or search for plants to learn about their origins, care, and environmental benefits." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="garden-nav">
+    <div class="container garden-nav-content">
+      <a href="index.html" class="logo">
+        <span class="icon">🌱</span>
+        Plant Garden
+      </a>
+      <div class="garden-nav-links">
+        <a href="index.html">Directory</a>
+        <a href="../index.html" class="main-site-btn">🌍 Main Site</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== HEADER ========== -->
+  <div class="container">
+    <div class="garden-header">
+      <h1>🌿 <span>QR Plant Garden</span></h1>
+      <p>Scan a QR code in the 4th floor garden or search below to discover information about each plant.</p>
+    </div>
+
+    <!-- Search -->
+    <div class="search-section">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="plantSearch" placeholder="Search by plant name or code (e.g. PLANT-001)..." autocomplete="off" />
+      <p class="search-hint">Try searching "Tulsi", "Snake Plant", or "PLANT-003"</p>
+    </div>
+
+    <!-- Plant Grid -->
+    <div class="plant-grid" id="plantGrid">
+      <!-- Plants rendered by JS -->
+    </div>
+
+    <!-- No Results -->
+    <div class="no-results" id="noResults" style="display: none;">
+      <div class="emoji">🔍</div>
+      <h3>No plants found</h3>
+      <p>Try a different search term or browse the full directory.</p>
+    </div>
+  </div>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="garden-footer">
+    <div class="container">
+      <p>🌱 Sustainability Sphere Club – GIIS | <a href="../index.html">Back to Main Site</a></p>
+    </div>
+  </footer>
+
+  <script src="plants-data.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const grid = document.getElementById('plantGrid');
+      const searchInput = document.getElementById('plantSearch');
+      const noResults = document.getElementById('noResults');
+
+      function renderPlants(plants) {
+        grid.innerHTML = '';
+        if (plants.length === 0) {
+          noResults.style.display = 'block';
+          return;
+        }
+        noResults.style.display = 'none';
+
+        plants.forEach(plant => {
+          const card = document.createElement('a');
+          card.href = `plant.html?code=${plant.code}`;
+          card.className = 'plant-card';
+          card.innerHTML = `
+            <div class="plant-card-img">
+              ${plant.emoji}
+              <span class="plant-code-badge">${plant.code}</span>
+            </div>
+            <div class="plant-card-body">
+              <h3>${plant.name}</h3>
+              <p class="scientific">${plant.scientific}</p>
+              <p>${plant.description}</p>
+              <div class="plant-tags">
+                <span class="plant-tag">☀️ ${plant.sunlight.split('–')[0].split('(')[0].trim()}</span>
+                <span class="plant-tag">💧 ${plant.watering.split('–')[0].trim()}</span>
+                <span class="plant-tag">🌍 ${plant.origin.split('(')[0].trim()}</span>
+              </div>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      }
+
+      // Initial render
+      renderPlants(window.PLANTS);
+
+      // Search
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        if (!query) {
+          renderPlants(window.PLANTS);
+          return;
+        }
+        const filtered = window.PLANTS.filter(p =>
+          p.name.toLowerCase().includes(query) ||
+          p.scientific.toLowerCase().includes(query) ||
+          p.code.toLowerCase().includes(query) ||
+          p.origin.toLowerCase().includes(query)
+        );
+        renderPlants(filtered);
+      });
+
+      // Check if there's a search param from QR scan
+      const urlParams = new URLSearchParams(window.location.search);
+      const searchQuery = urlParams.get('search');
+      if (searchQuery) {
+        searchInput.value = searchQuery;
+        searchInput.dispatchEvent(new Event('input'));
+      }
+    });
+  </script>
+</body>
+</html>

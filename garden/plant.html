@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plant Info – Sustainability Sphere Garden</title>
+  <meta name="description" content="Discover detailed plant information from the Sustainability Sphere QR Garden." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="garden-nav">
+    <div class="container garden-nav-content">
+      <a href="index.html" class="logo">
+        <span class="icon">🌱</span>
+        Plant Garden
+      </a>
+      <div class="garden-nav-links">
+        <a href="index.html">Directory</a>
+        <a href="../index.html" class="main-site-btn">🌍 Main Site</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== PLANT DETAIL ========== -->
+  <div class="container plant-detail">
+    <a href="index.html" class="back-btn">← Back to Garden Directory</a>
+
+    <div id="plantContent">
+      <!-- Rendered by JS -->
+    </div>
+
+    <!-- Not Found -->
+    <div class="no-results" id="notFound" style="display: none;">
+      <div class="emoji">🌱</div>
+      <h3>Plant Not Found</h3>
+      <p>The plant code you scanned doesn't match any plant in our database.</p>
+      <br />
+      <a href="index.html" class="back-btn">🌿 Browse All Plants</a>
+    </div>
+  </div>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="garden-footer">
+    <div class="container">
+      <p>🌱 Sustainability Sphere Club – GIIS | <a href="../index.html">Back to Main Site</a></p>
+    </div>
+  </footer>
+
+  <script src="plants-data.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const content = document.getElementById('plantContent');
+      const notFound = document.getElementById('notFound');
+
+      // Get plant code from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+
+      if (!code) {
+        notFound.style.display = 'block';
+        return;
+      }
+
+      // Find the plant
+      const plant = window.PLANTS.find(p => p.code.toLowerCase() === code.toLowerCase());
+
+      if (!plant) {
+        notFound.style.display = 'block';
+        return;
+      }
+
+      // Update page title
+      document.title = `${plant.name} – Sustainability Sphere Garden`;
+
+      // Render plant detail
+      content.innerHTML = `
+        <div class="plant-detail-card">
+          <div class="plant-detail-hero">
+            ${plant.emoji}
+            <span class="code-badge">${plant.code}</span>
+          </div>
+          <div class="plant-detail-body">
+            <h1>${plant.name}</h1>
+            <p class="scientific-name">${plant.scientific}</p>
+
+            <p class="description">${plant.description}</p>
+
+            <div class="plant-info-grid">
+              <div class="plant-info-item">
+                <div class="info-icon">🌍</div>
+                <h4>Native Origin</h4>
+                <p>${plant.origin}</p>
+              </div>
+              <div class="plant-info-item">
+                <div class="info-icon">☀️</div>
+                <h4>Sunlight</h4>
+                <p>${plant.sunlight}</p>
+              </div>
+              <div class="plant-info-item">
+                <div class="info-icon">💧</div>
+                <h4>Watering</h4>
+                <p>${plant.watering}</p>
+              </div>
+            </div>
+
+            <div class="benefits-section">
+              <h3>🌿 Environmental Benefits</h3>
+              <div class="benefits-list">
+                ${plant.benefits.map(b => `<span class="benefit-chip">${b}</span>`).join('')}
+              </div>
+            </div>
+
+            <div class="fun-fact">
+              <h3>💡 Fun Fact</h3>
+              <p>${plant.funFact}</p>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+  </script>
+</body>
+</html>
