@@ -613,6 +613,19 @@ ul { list-style: none; }
   box-shadow: 0 0 20px rgba(165, 214, 167, 0.5);
 }
 
+/* Leadership Cards - Enhanced styling */
+.leadership-card {
+  border: 2px solid rgba(165, 214, 167, 0.3) !important;
+  box-shadow: 0 6px 25px rgba(27, 94, 32, 0.15) !important;
+  transform: scale(1.02);
+}
+
+.leadership-card:hover {
+  transform: translateY(-8px) scale(1.02) !important;
+  box-shadow: 0 12px 40px rgba(27, 94, 32, 0.25) !important;
+  border-color: var(--forest-green) !important;
+}
+
 .team-card-img {
   width: 100%;
   height: 200px;
